@@ -1,13 +1,27 @@
 name: Release
 
-# Tags must be human-pushed. Never automate tag creation from a bot.
+# Two triggers:
+#   1. Push a v* tag (e.g. v0.1.1) → release that exact version.
+#   2. workflow_dispatch with a version input → release without manually
+#      tagging. The workflow bumps package.json on the fly, publishes,
+#      then creates the tag + GitHub release.
+#
+# Both paths publish to npm via OIDC trusted publishing (no NPM_TOKEN) and
+# create a GitHub Release with auto-generated notes.
+
 on:
   push:
     tags:
       - "v*"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to release (e.g. 0.1.2 — no leading 'v')"
+        required: true
+        type: string
 
 permissions:
-  contents: write   # for softprops/action-gh-release
+  contents: write   # for softprops/action-gh-release + tag push
   id-token: write   # for npm OIDC trusted publishing
 
 jobs:
@@ -16,7 +30,7 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with: { submodules: recursive }
 
       - name: Build image
@@ -31,6 +45,12 @@ jobs:
       - name: Run build.sh
         run: docker run --rm --user $(id -u):$(id -g) -v $PWD:/work rnp-wasm:local scripts/build.sh
 
+      - name: Verify the public API is present
+        run: |
+          for f in dist/index.js dist/index.d.ts dist/module.js dist/module.wasm; do
+            [[ -f "$f" ]] || { echo "missing: $f"; exit 1; }
+          done
+
       - uses: actions/upload-artifact@v4
         with: { name: dist, path: dist/, if-no-files-found: error }
 
@@ -40,33 +60,81 @@ jobs:
     runs-on: ubuntu-24.04
     environment: release
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+
+      - name: Bump version (workflow_dispatch only)
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          current=$(node -p "require('./package.json').version")
+          if [ "$current" != "${{ inputs.version }}" ]; then
+            npm version ${{ inputs.version }} --no-git-tag-version
+          fi
+
+      - uses: actions/setup-node@v7
         with:
           node-version: "22"
           registry-url: "https://registry.npmjs.org"
+
       - uses: actions/download-artifact@v4
         with: { name: dist, path: dist }
+
       - run: npm ci --ignore-scripts
-      # --provenance uses the OIDC token; no NPM_TOKEN needed.
+
+      # Gates: refuse to publish a broken release. Lint + typecheck are
+      # fast and catch obvious mistakes. Tests run in ci.yml on every PR;
+      # we don't duplicate them here to keep release time under 5 min.
+      - run: npm run lint
+      - run: npm run typecheck
+
+      - name: Determine publish version
+        id: ver
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "version=${{ inputs.version }}" >> "$GITHUB_OUTPUT"
+            echo "tag=v${{ inputs.version }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "version=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+            echo "tag=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
+          fi
+
       - run: npm publish --provenance --access public
 
+      - name: Push tag (workflow_dispatch only)
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add package.json package-lock.json
+          git commit -m "chore(release): v${{ steps.ver.outputs.version }}"
+          git tag ${{ steps.ver.outputs.tag }}
+          git push origin HEAD:main ${{ steps.ver.outputs.tag }}
+
   github-release:
-    name: Attach artifacts to GitHub Release
-    needs: build
+    name: GitHub Release
+    needs: publish-npm
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: actions/download-artifact@v4
         with: { name: dist, path: dist }
+
+      - name: Determine tag
+        id: ver
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "tag=v${{ inputs.version }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "tag=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Create release with artifacts
         uses: softprops/action-gh-release@v3
         with:
+          tag_name: ${{ steps.ver.outputs.tag }}
           files: |
             dist/module.wasm
             dist/module.js
             dist/index.js
             dist/index.d.ts
             LICENSE
-          draft: true
           generate_release_notes: true
