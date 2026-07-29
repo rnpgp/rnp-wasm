@@ -66,6 +66,12 @@ if [[ "${BUILD_ASYNC}" == "1" ]]; then
 fi
 
 # 4. TypeScript declarations + final packaging.
+#    Requires node_modules (for ./node_modules/.bin/tsc). The Docker image
+#    doesn't ship the project's deps; install them now if missing.
+if [[ ! -x ./node_modules/.bin/tsc ]] && command -v npm >/dev/null 2>&1; then
+  echo "==> Installing dev dependencies (for tsc)"
+  npm ci --ignore-scripts || npm install --ignore-scripts
+fi
 "${REPO_ROOT}/scripts/package.sh"
 
 echo "rnp-wasm build complete → dist/"

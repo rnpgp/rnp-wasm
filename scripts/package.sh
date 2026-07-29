@@ -11,11 +11,22 @@ mkdir -p dist
 # The Embind-emitted dist/module.js + dist/module.wasm sit alongside the
 # compiled TS files. ts/wasm-module.ts imports "../dist/module.js" which
 # resolves correctly from the compiled dist/wasm-module.js.
-if command -v npx >/dev/null 2>&1; then
-  if ! npx -y tsc -p tsconfig.build.json; then
-    echo "ERROR: tsc failed; refusing to ship a broken tarball" >&2
-    exit 1
-  fi
+#
+# IMPORTANT: do NOT use `npx -y tsc` — there's an unrelated deprecated
+# `tsc@2.0.4` package on npm that npx would install instead of TypeScript.
+# Use the local typescript install via npm run, or fall back to the binary.
+if [[ -x ./node_modules/.bin/tsc ]]; then
+  TSC=./node_modules/.bin/tsc
+elif command -v tsc >/dev/null 2>&1; then
+  TSC=tsc
+else
+  echo "ERROR: typescript not installed; run 'npm install' first" >&2
+  exit 1
+fi
+
+if ! "$TSC" -p tsconfig.build.json; then
+  echo "ERROR: tsc failed; refusing to ship a broken tarball" >&2
+  exit 1
 fi
 
 # dist/ already has LICENSE/README/CHANGELOG copied by build-bindings.sh's
