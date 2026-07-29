@@ -48,7 +48,9 @@ void FfiHandle::set_key_provider(emscripten::val callback) {
 static std::string version_string() { return rnp_version_string(); }
 static std::string version_string_full() { return rnp_version_string_full(); }
 static uint32_t version_value() { return rnp_version(); }
-static uint64_t version_commit_timestamp() { return rnp_version_commit_timestamp(); }
+// Embind doesn't auto-bind uint64_t in all configurations; timestamps fit
+// comfortably in double precision (2^53 >> any plausible Unix time).
+static double version_commit_timestamp() { return static_cast<double>(rnp_version_commit_timestamp()); }
 
 // Translate caller-friendly slug ("symmetric", "hash", ...) to rnp's
 // RNP_FEATURE_* string constant. rnp_supported_features returns
