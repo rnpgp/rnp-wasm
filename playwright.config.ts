@@ -13,7 +13,7 @@ export default defineConfig({
     command: "vite preview --port 4173 --strictPort",
     url: "http://127.0.0.1:4173/harness.html",
     reuseExistingServer: !process.env.CI,
-    timeout: 60_000,
+    timeout: 180_000,
   },
   projects: [
     { name: "chromium", use: { ...devices["Desktop Chrome"] } },
