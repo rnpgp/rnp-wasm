@@ -24,6 +24,15 @@ permissions:
   contents: write   # for softprops/action-gh-release + tag push
   id-token: write   # for npm OIDC trusted publishing
 
+# One release per tag (different tags = different groups, never collide).
+# Cancel-in-progress is OFF: cancelling a publish mid-flight could leave
+# npm in a half-published state. Two dispatch runs for the same version
+# would race, but that's an operator error — the group prevents it
+# queueing instead of cancelling.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref_name || github.run_id }}
+  cancel-in-progress: false
+
 jobs:
   build:
     name: Build release artifacts

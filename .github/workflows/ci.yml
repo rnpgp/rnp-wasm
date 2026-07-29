@@ -7,9 +7,10 @@ on:
   workflow_dispatch:
 
 concurrency:
-  # Same PR → same group. Pushing to a PR cancels any in-flight run for that PR.
-  # Runs on main (push, not pull_request) group by ref so different branches don't
-  # collide, but main itself isn't cancelled.
+  # One active run per PR (or per ref on main). Pushing a new commit to a PR
+  # cancels any in-flight run for that same PR. Pushing to main cancels the
+  # previous main run (a fast re-push doesn't need both CIs).
+  # PR-number is the primary key; for non-PR events we fall back to the ref.
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
