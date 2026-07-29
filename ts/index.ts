@@ -38,6 +38,13 @@ export { decrypt } from "./operations/decrypt.js";
 export { GenerateOperation } from "./operations/generate.js";
 export type { GenerateOptions } from "./operations/generate.js";
 
+// Worker pool: opt-in. Importing WorkerPool pulls in comlink (a runtime dep).
+// Bundlers will also pull dist/worker.js as a separate Web Worker chunk via
+// the new Worker(new URL("./worker.js", import.meta.url)) pattern in pool.ts.
+// Requires a modern bundler (Vite, webpack 5+) that understands that pattern.
+export { WorkerPool } from "./pool.js";
+export type { WorkerPoolOptions, WorkerApi } from "./pool.js";
+
 export {
   PublicKeyAlgorithms,
   SymmetricAlgorithms,

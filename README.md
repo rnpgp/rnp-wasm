@@ -338,19 +338,35 @@ rnp-wasm/
 ├── test/browser/        Playwright smoke tests + harness
 ├── docs/                API reference (typedoc), worked examples
 ├── Dockerfile           Reproducible build image
-└── dist/                Generated: rnp.{wasm,js}, features.json
+└── dist/                Generated: module.{wasm,js}, index.{js,d.ts}, features.json
 ```
 
-## Roadmap
+## Optional features
 
-- [ ] Trim Botan module set (`--enable-modules=`) to cut wasm size ~50%
-- [ ] Asyncify build for async streaming + async password providers
-- [ ] Web worker pool (`ts/worker.ts`) for off-main-thread crypto
-- [ ] rnp HEAD tracking CI (`scripts/build-rnp.sh` honors `RNP_REF` env var)
-- [ ] npm publish via OIDC trusted publishing
+- **Worker pool** (`WorkerPool`): offload crypto to Web Workers via Comlink.
+  Re-exported from the main entry — see `docs/examples/worker-pool.ts` for a
+  runnable example. Requires a bundler that understands the
+  `new Worker(new URL("./worker.js", import.meta.url))` pattern (Vite,
+  webpack 5+).
+- **Async (JSPI) variant**: `dist/module-async.{js,wasm}` is built with
+  `scripts/build.sh --async`. Supports `async` password providers and
+  streaming. Excluded from the npm tarball by default (~10 MB); install
+  from source or wait for a dedicated `@rnpgp/rnp-async` package.
+- **PQC variant**: Botan build with `--variant pqc` adds ML-KEM, ML-DSA,
+  SLH-DSA modules. See `variants.json`.
 
-See [`TODO.complete/00-master-plan.md`](TODO.complete/00-master-plan.md) for
-the full work plan and [`AUDIT.md`](AUDIT.md) for known issues.
+## Release flow
+
+Releases publish to npm via [OIDC trusted publishing](https://docs.npmjs.com/generating-provenance-statements#prerequisites)
+from `.github/workflows/release.yml`. Two ways to cut a release:
+
+1. **Tag push** — `git tag v0.1.2 && git push origin v0.1.2`
+2. **Actions UI** — https://github.com/rnpgp/rnp-wasm/actions/workflows/release.yml →
+   Run workflow → enter version. The workflow bumps `package.json`, publishes,
+   and pushes the tag.
+
+Both paths run lint + typecheck before publishing, then create a GitHub
+Release with auto-generated notes.
 
 ## License
 

@@ -14,6 +14,7 @@
  */
 
 import * as Comlink from "comlink";
+export type { WorkerApi } from "./worker.js";
 import type { WorkerApi } from "./worker.js";
 
 export interface WorkerPoolOptions {
