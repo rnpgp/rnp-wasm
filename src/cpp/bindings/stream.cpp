@@ -138,12 +138,12 @@ EMSCRIPTEN_BINDINGS(rnpwasm_stream) {
   using namespace rnpwasm;
   using namespace emscripten;
 
-  class_<StreamInputHandle, base<InputHandle>>("RnpStreamInput")
+  class_<StreamInputHandle, base<InputHandle>>("RnpStreamInputHandle")
     .class_function("create", &StreamInputHandle::create, allow_raw_pointers())
     .function("_destroy", &StreamInputHandle::reset)
     ;
 
-  class_<StreamOutputHandle, base<OutputHandle>>("RnpStreamOutput")
+  class_<StreamOutputHandle, base<OutputHandle>>("RnpStreamOutputHandle")
     .class_function("create", &StreamOutputHandle::create, allow_raw_pointers())
     .function("finish", &StreamOutputHandle::finish)
     .function("_destroy", &StreamOutputHandle::reset)

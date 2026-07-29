@@ -120,7 +120,7 @@ export class Ffi extends Handle<RnpFfiHandle> {
   setTimestamp(t: Date | number | bigint): void {
     const millis = typeof t === "number" ? t :
                    typeof t === "bigint" ? Number(t) : t.getTime();
-    this.raw.setTimestamp(BigInt(Math.floor(millis)));
+    this.raw.setTimestamp(Number(Math.floor(millis)));
   }
 
   /** @internal raw Embind handle — for wrapper classes only. Brand-gated. */

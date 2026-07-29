@@ -52,7 +52,7 @@ export class StreamInput extends Handle<RnpStreamInputHandle> {
   private constructor(handle: RnpStreamInputHandle) { super(handle); }
 
   static create(ffi: Ffi, reader: SyncReader): StreamInput {
-    return new StreamInput(ffi.module_(INTERNAL_TOKEN).RnpStreamInput.create(reader));
+    return new StreamInput(ffi.module_(INTERNAL_TOKEN).RnpStreamInputHandle.create(reader));
   }
 }
 
@@ -72,7 +72,7 @@ export class StreamOutput extends Handle<RnpStreamOutputHandle> {
   private constructor(handle: RnpStreamOutputHandle) { super(handle); }
 
   static create(ffi: Ffi, writer: SyncWriter): StreamOutput {
-    return new StreamOutput(ffi.module_(INTERNAL_TOKEN).RnpStreamOutput.create(writer));
+    return new StreamOutput(ffi.module_(INTERNAL_TOKEN).RnpStreamOutputHandle.create(writer));
   }
 
   /** Finalize the output (flush + close). Required after the last write. */

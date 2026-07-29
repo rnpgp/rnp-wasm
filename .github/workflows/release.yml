@@ -34,34 +34,10 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  # Reuses the same build job as CI — no copy-pasted Docker steps.
   build:
     name: Build release artifacts
-    runs-on: ubuntu-24.04
-    timeout-minutes: 30
-    steps:
-      - uses: actions/checkout@v7
-        with: { submodules: recursive }
-
-      - name: Build image
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          load: true
-          tags: rnp-wasm:local
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-
-      - name: Run build.sh
-        run: docker run --rm --user $(id -u):$(id -g) -v $PWD:/work rnp-wasm:local scripts/build.sh
-
-      - name: Verify the public API is present
-        run: |
-          for f in dist/index.js dist/index.d.ts dist/module.js dist/module.wasm; do
-            [[ -f "$f" ]] || { echo "missing: $f"; exit 1; }
-          done
-
-      - uses: actions/upload-artifact@v4
-        with: { name: dist, path: dist/, if-no-files-found: error }
+    uses: ./.github/workflows/build.yml
 
   publish-npm:
     name: Publish to npm (OIDC)

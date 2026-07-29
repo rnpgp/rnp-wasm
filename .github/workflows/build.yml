@@ -1,10 +1,35 @@
 name: Build
 
+# Reusable build job. Called by ci.yml, release.yml, upstream-tracker.yml.
+# Single source of truth for: Docker image build + scripts/build.sh run +
+# dist artifact upload. Callers do NOT re-implement these steps.
+#
+# Usage from a caller workflow:
+#   jobs:
+#     build:        # explicit name so callers can `needs: build`
+#       uses: rnpgp/rnp-wasm/.github/workflows/build.yml@main
+#       with:
+#         rnp_ref: ${{ github.event.inputs.rnp_ref }}  # optional
+#         variant: ${{ github.event.inputs.variant }}  # optional
+
 on:
   workflow_call:
+    inputs:
+      rnp_ref:
+        description: "Optional rnp git ref to build against (default: pinned submodule)"
+        required: false
+        type: string
+      variant:
+        description: "Build variant (default, pqc, brainpool, sm)"
+        required: false
+        default: default
+        type: string
     outputs:
       wasm_sha:
         value: ${{ jobs.build.outputs.wasm_sha }}
+
+permissions:
+  contents: read
 
 jobs:
   build:
@@ -13,21 +38,46 @@ jobs:
     outputs:
       wasm_sha: ${{ steps.hash.outputs.sha }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with: { submodules: recursive }
-      - uses: docker/setup-buildx-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Cache Docker layers
+        uses: actions/cache@v6
+        with:
+          path: /tmp/.buildx-cache
+          key: buildx-${{ runner.os }}-${{ hashFiles('Dockerfile', 'scripts/**', 'cmake/**', 'src/cpp/**', 'CMakeLists.txt') }}
+          restore-keys: |
+            buildx-${{ runner.os }}-
+
       - name: Build image
         uses: docker/build-push-action@v6
         with:
           context: .
           load: true
           tags: rnp-wasm:local
-      - name: Build dist
-        run: docker run --rm --user $(id -u):$(id -g) -v $PWD:/work rnp-wasm:local scripts/build.sh
-      - name: Hash
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache,mode=max
+
+      - name: Run build.sh
+        env:
+          RNP_REF: ${{ inputs.rnp_ref }}
+          VARIANT: ${{ inputs.variant }}
+        run: docker run --rm --user $(id -u):$(id -g) -v $PWD:/work -e RNP_REF -e VARIANT rnp-wasm:local scripts/build.sh
+
+      - name: Verify the public API is present
+        run: |
+          for f in dist/index.js dist/index.d.ts dist/module.js dist/module.wasm; do
+            [[ -f "$f" ]] || { echo "missing: $f"; exit 1; }
+          done
+
+      - name: Hash wasm artifact
         id: hash
         run: |
           sha=$(sha256sum dist/module.wasm | awk '{print $1}')
           echo "sha=${sha}" >> "$GITHUB_OUTPUT"
+
       - uses: actions/upload-artifact@v4
         with: { name: dist, path: dist/, if-no-files-found: error }

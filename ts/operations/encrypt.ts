@@ -30,6 +30,6 @@ export class EncryptOperation extends Handle<RnpEncryptOpHandle> {
   compression(alg: string, level: number): this { this.raw.setCompression(CompressionAlgorithms.lookup(alg), level); return this; }
   aead(name: string): this { this.raw.setAead(AeadAlgorithms.lookup(name)); return this; }
   fileName(name: string): this { this.raw.setFileName(name); return this; }
-  fileMtime(d: Date): this { this.raw.setFileMtime(BigInt(Math.floor(d.getTime() / 1000))); return this; }
+  fileMtime(d: Date): this { this.raw.setFileMtime(Number(Math.floor(d.getTime() / 1000))); return this; }
   execute(): void { this.raw.execute(); }
 }

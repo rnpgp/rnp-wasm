@@ -43,7 +43,7 @@ EMSCRIPTEN_BINDINGS(rnpwasm_iterator) {
   using namespace rnpwasm;
   using namespace emscripten;
 
-  class_<IdentifierIteratorHandle>("RnpIdentifierIterator")
+  class_<IdentifierIteratorHandle>("RnpIdentifierIteratorHandle")
     .function("_destroy", &IdentifierIteratorHandle::reset)
     .function("next",     &IdentifierIteratorHandle::next)
     ;

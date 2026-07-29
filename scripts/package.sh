@@ -29,11 +29,5 @@ if ! "$TSC" -p tsconfig.build.json; then
   exit 1
 fi
 
-# dist/ already has LICENSE/README/CHANGELOG copied by build-bindings.sh's
-# stale-artifact cleanup step (which rm's only rnp*/module* patterns, not the
-# doc files). Keep dist/ focused on artifacts; the tarball's top-level files
-# are pulled from the workspace root by npm via the "files" field.
-rm -f dist/LICENSE dist/README.md dist/CHANGELOG.md
-
 echo "==> Packaged"
 ls -la dist/

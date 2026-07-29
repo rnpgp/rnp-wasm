@@ -33,7 +33,7 @@ export class Rnp {
   versionString(): string { return this.module.rnpVersionString(); }
   versionStringFull(): string { return this.module.rnpVersionStringFull(); }
   version(): number { return this.module.rnpVersion(); }
-  versionCommitTimestamp(): bigint { return this.module.rnpVersionCommitTimestamp(); }
+  versionCommitTimestamp(): number { return this.module.rnpVersionCommitTimestamp(); }
 
   supportsFeature(type: string, name: string): boolean {
     return this.module.rnpSupportsFeature(type, name);
@@ -53,7 +53,7 @@ export class Rnp {
     }
   }
 
-  calculateIterations(hash: string, msec: bigint): number {
+  calculateIterations(hash: string, msec: number): number {
     return this.module.rnpCalculateIterations(hash, msec);
   }
 

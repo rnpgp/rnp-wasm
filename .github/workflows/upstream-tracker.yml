@@ -13,35 +13,26 @@ permissions:
   issues: write
 
 jobs:
+  # Reuses the same build job as CI but passes rnp_ref=origin/main to probe
+  # against rnp's main branch. continue-on-error below catches the failure.
   probe:
+    name: Probe build (rnp@main)
+    uses: ./.github/workflows/build.yml
+    with:
+      rnp_ref: origin/main
+    permissions:
+      contents: read
+
+  report:
+    name: Report probe result
     runs-on: ubuntu-24.04
-    timeout-minutes: 30
+    needs: probe
+    if: always()
     steps:
       - uses: actions/checkout@v4
         with: { submodules: recursive }
 
-      - name: Build image
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          load: true
-          tags: rnp-wasm:local
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-
-      - name: Probe build against rnp@main
-        id: probe
-        continue-on-error: true
-        run: |
-          docker run --rm \
-            -v "$PWD:/work" \
-            -e RNP_REF=origin/main \
-            --user $(id -u):$(id -g) \
-            rnp-wasm:local \
-            scripts/build.sh --rnp-ref origin/main
-
       - name: Compute drift diff
-        if: always()
         id: drift
         run: |
           cd third-party/rnp
@@ -53,7 +44,7 @@ jobs:
           } >> "$GITHUB_OUTPUT"
 
       - name: Render issue body
-        if: steps.probe.outcome != 'success'
+        if: needs.probe.result != 'success'
         env:
           DRIFT: ${{ steps.drift.outputs.diff }}
         run: |
@@ -70,7 +61,7 @@ jobs:
           EOF
 
       - name: Open or update tracking issue
-        if: steps.probe.outcome != 'success'
+        if: needs.probe.result != 'success'
         uses: peter-evans/create-issue-from-file@v6
         with:
           title: "Upstream tracker: rnp@main build failed"
@@ -78,7 +69,7 @@ jobs:
           labels: upstream,drift
 
       - name: Close any prior tracking issue on success
-        if: steps.probe.outcome == 'success'
+        if: needs.probe.result == 'success'
         uses: actions/github-script@v9
         with:
           script: |
