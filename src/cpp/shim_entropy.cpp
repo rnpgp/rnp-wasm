@@ -29,7 +29,8 @@ EM_JS(uint32_t, shim_get_random_bytes, (uint32_t buf_addr, uint32_t len), {
     cryptoObj.getRandomValues(view);
     return len;
   } catch (e) {
-    Module.err('shim_get_random_bytes failed: ' + e);
+    // Emscripten 6.x doesn't expose Module.err by default; fall back to console.
+    (typeof Module.err === 'function' ? Module.err : console.error)('shim_get_random_bytes failed: ' + e);
     return 0;
   }
 });
