@@ -33,7 +33,7 @@ jobs:
           fi
           echo "baseline=${base}" >> "$GITHUB_OUTPUT"
       - name: Comment on PR
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           script: |
             const cur = ${{ steps.sizes.outputs.current }};
