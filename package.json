@@ -1,6 +1,6 @@
 {
   "name": "rnp-wasm",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "WASM build of rnp (RFC 9580 OpenPGP) with idiomatic TypeScript bindings.",
   "license": "BSD-2-Clause",
   "type": "module",

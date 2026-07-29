@@ -9,6 +9,16 @@ This file is auto-maintained by [release-please](https://github.com/googleapis/r
 based on [Conventional Commits](https://www.conventionalcommits.org/) on `main`.
 Do not edit by hand — propose changes via Conventional Commits and let automation update this file.
 
+## 1.0.0 (2026-07-29)
+
+
+### Bug Fixes
+
+* **bindings:** cast uint64_t timestamp to double for Embind ([b7b4c80](https://github.com/rnpgp/rnp-wasm/commit/b7b4c80d96808f4a617f207b7cb73187ed62fec7))
+* **ci:** make /opt/rnp-wasm world-writable in Docker image ([b51490d](https://github.com/rnpgp/rnp-wasm/commit/b51490d54024416f4b46d438173d089f79e1ce87))
+* don't rely on Module.err being exposed in Emscripten 6.x ([89e1022](https://github.com/rnpgp/rnp-wasm/commit/89e1022515cbf58f66b6ceeabbbef3a9259c581b))
+* **test:** make browser harness serveable by vite preview ([d45d120](https://github.com/rnpgp/rnp-wasm/commit/d45d1205b1c0c4616a5cdd56462a21366dc1fc04))
+
 ## [0.1.0] - 2026-07-29
 
 First public alpha. Core API stable; 82/82 tests pass against rnp 0.18.1 +
