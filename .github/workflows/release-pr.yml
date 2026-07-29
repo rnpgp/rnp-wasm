@@ -1,0 +1,30 @@
+name: Release PR
+
+# Automated release-please workflow. Maintains a "Release PR" on main that
+# accumulates Conventional Commits and produces a CHANGELOG.md entry. When
+# the Release PR is merged, release-please tags the release, which then
+# triggers release.yml (the actual publish step).
+#
+# This workflow does NOT publish to npm or push tags. It only maintains the
+# Release PR.
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release-please:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: googleapis/release-please-action@v4
+        with:
+          release-type: node
+          package-name: rnp-wasm
+          # Bump-only commits won't trigger a release.
+          include-component-in-tag: false
+          # The pull-request branch pattern; defaults to release-please--branches--main
+          bump-minor-pre-major: true

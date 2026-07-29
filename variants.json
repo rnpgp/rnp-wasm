@@ -1,0 +1,40 @@
+{
+  "default": {
+    "description": "Standard RFC 9580 OpenPGP build. All Botan modules rnp needs.",
+    "botan_extra_modules": [],
+    "rnp_cache_vars": {
+      "ENABLE_PQC": "OFF",
+      "ENABLE_CRYPTO_REFRESH": "OFF"
+    },
+    "ts_registry_augment": null
+  },
+  "pqc": {
+    "description": "Post-quantum build: ML-KEM, ML-DSA, SLH-DSA via Botan + ENABLE_PQC=ON.",
+    "botan_extra_modules": ["ml_kem", "ml_dsa", "slh_dsa"],
+    "rnp_cache_vars": {
+      "ENABLE_PQC": "ON",
+      "ENABLE_CRYPTO_REFRESH": "OFF"
+    },
+    "ts_registry_augment": "ts/pqc.ts"
+  },
+  "brainpool": {
+    "description": "Adds Brainpool curves.",
+    "botan_extra_modules": ["brainpool"],
+    "rnp_cache_vars": {
+      "ENABLE_PQC": "OFF",
+      "ENABLE_CRYPTO_REFRESH": "OFF",
+      "ENABLE_BRAINPOOL": "ON"
+    },
+    "ts_registry_augment": null
+  },
+  "sm": {
+    "description": "SM2/SM3/SM4 (Chinese cryptography suite).",
+    "botan_extra_modules": [],
+    "rnp_cache_vars": {
+      "ENABLE_PQC": "OFF",
+      "ENABLE_CRYPTO_REFRESH": "OFF",
+      "ENABLE_SM2": "ON"
+    },
+    "ts_registry_augment": null
+  }
+}

@@ -1,0 +1,13 @@
+# Prefer Emscripten ports for zlib/bzip2.
+find_package(ZLIB QUIET)
+find_package(BZip2 QUIET)
+if(ZLIB_FOUND)
+  message(STATUS "zlib found: ${ZLIB_LIBRARIES}")
+else()
+  message(STATUS "zlib not found via CMake; relying on -sUSE_ZLIB=1")
+endif()
+if(BZIP2_FOUND)
+  message(STATUS "bzip2 found: ${BZIP2_LIBRARIES}")
+else()
+  message(STATUS "bzip2 not found via CMake; relying on -sUSE_BZIP2=1")
+endif()

@@ -1,0 +1,78 @@
+name: Release
+
+# Tags must be human-pushed. Never automate tag creation from a bot.
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write   # for softprops/action-gh-release
+  id-token: write   # for npm OIDC trusted publishing
+
+jobs:
+  build:
+    name: Build release artifacts
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with: { submodules: recursive }
+
+      - name: Build image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          load: true
+          tags: rnp-wasm:local
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Run build.sh
+        run: docker run --rm --user $(id -u):$(id -g) -v $PWD:/work rnp-wasm:local scripts/build.sh
+
+      - name: Compute checksums
+        run: |
+          ( cd dist && for f in rnp.wasm rnp.mjs rnp.js; do
+              [[ -f "$f" ]] && sha256sum "$f" > "$f.sha256"
+            done )
+
+      - uses: actions/upload-artifact@v4
+        with: { name: dist, path: dist/, if-no-files-found: error }
+
+  publish-npm:
+    name: Publish to npm (OIDC)
+    needs: build
+    runs-on: ubuntu-24.04
+    environment: release
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          registry-url: "https://registry.npmjs.org"
+      - uses: actions/download-artifact@v4
+        with: { name: dist, path: dist }
+      - run: npm ci --ignore-scripts
+      # --provenance uses the OIDC token; no NPM_TOKEN needed.
+      - run: npm publish --provenance --access public
+
+  github-release:
+    name: Attach artifacts to GitHub Release
+    needs: build
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with: { name: dist, path: dist }
+      - name: Create release with artifacts
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/rnp.wasm
+            dist/rnp.wasm.sha256
+            dist/rnp.mjs
+            dist/rnp.js
+            LICENSE
+          draft: true
+          generate_release_notes: true

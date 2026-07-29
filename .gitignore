@@ -1,0 +1,36 @@
+# Dependencies
+node_modules/
+
+# Build artifacts
+dist/
+build/
+.cache/
+
+# Third-party source (submodule-managed)
+third-party/rnp/
+
+# IDE / OS
+.DS_Store
+.vscode/
+.idea/
+*.swp
+*~
+
+# Test artifacts
+coverage/
+test-results/
+playwright-report/
+.nyc_output/
+test/fixtures/keys/.cache/
+
+# Local env
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+npm-debug.log*
+
+# Don't ignore the .gitmodules / submodule pointer
+!.gitmodules

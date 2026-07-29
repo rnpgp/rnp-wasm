@@ -1,0 +1,24 @@
+diff --git a/src/lib/crypto/ec.cpp b/src/lib/crypto/ec.cpp
+index 77f90ebf..ac8caf6a 100644
+--- a/src/lib/crypto/ec.cpp
++++ b/src/lib/crypto/ec.cpp
+@@ -38,6 +38,7 @@
+ #include "botan_utils.hpp"
+ #include "botan/bigint.h"
+ #include "botan/ecdh.h"
++#include "botan/ec_group.h"
+ #include <cassert>
+ #endif
+ 
+diff --git a/src/lib/crypto/exdsa_ecdhkem.cpp b/src/lib/crypto/exdsa_ecdhkem.cpp
+index a4895f91..1b8c7ce8 100644
+--- a/src/lib/crypto/exdsa_ecdhkem.cpp
++++ b/src/lib/crypto/exdsa_ecdhkem.cpp
+@@ -26,6 +26,7 @@
+ 
+ #include "exdsa_ecdhkem.h"
+ #include "ecdh.h"
++#include "botan/ec_group.h"
+ #include "ed25519.h"
+ #include "ecdsa.h"
+ #include "ec.h"

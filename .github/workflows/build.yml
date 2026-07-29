@@ -1,0 +1,33 @@
+name: Build
+
+on:
+  workflow_call:
+    outputs:
+      wasm_sha:
+        value: ${{ jobs.build.outputs.wasm_sha }}
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    outputs:
+      wasm_sha: ${{ steps.hash.outputs.sha }}
+    steps:
+      - uses: actions/checkout@v4
+        with: { submodules: recursive }
+      - uses: docker/setup-buildx-action@v3
+      - name: Build image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          load: true
+          tags: rnp-wasm:local
+      - name: Build dist
+        run: docker run --rm --user $(id -u):$(id -g) -v $PWD:/work rnp-wasm:local scripts/build.sh
+      - name: Hash
+        id: hash
+        run: |
+          sha=$(sha256sum dist/rnp.wasm | awk '{print $1}')
+          echo "sha=${sha}" >> "$GITHUB_OUTPUT"
+      - uses: actions/upload-artifact@v4
+        with: { name: dist, path: dist/, if-no-files-found: error }

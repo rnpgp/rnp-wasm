@@ -1,0 +1,65 @@
+{
+  "name": "rnp-wasm",
+  "version": "0.1.0",
+  "description": "WASM build of rnp (RFC 9580 OpenPGP) with idiomatic TypeScript bindings.",
+  "license": "BSD-2-Clause",
+  "type": "module",
+  "sideEffects": false,
+  "main": "dist/rnp.js",
+  "module": "dist/rnp.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/rnp.js",
+      "require": "./dist/rnp.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md",
+    "CHANGELOG.md"
+  ],
+  "engines": {
+    "node": ">=18.18"
+  },
+  "scripts": {
+    "build": "scripts/build.sh",
+    "build:docker": "scripts/build.sh --docker",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:browser": "playwright test",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "lint": "eslint ts test --max-warnings=0",
+    "docs:build": "typedoc",
+    "docs:preview": "vite preview --out-dir docs/api",
+    "size:budget": "scripts/size-budget.sh check",
+    "size:budget:update": "scripts/size-budget.sh update",
+    "clean": "scripts/clean.sh",
+    "dev:shell": "scripts/dev-shell.sh",
+    "bench": "vitest bench --config vitest.bench.config.ts",
+    "prepublishOnly": "node -e \"['dist/rnp.js','dist/rnp.wasm'].forEach(f=>{const fs=require('fs');if(!fs.existsSync(f)){console.error('Missing: '+f);process.exit(1)}})\""
+  },
+  "dependencies": {
+    "comlink": "^4.4.1"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.47.0",
+    "@types/node": "^22.5.0",
+    "@typescript-eslint/eslint-plugin": "^8.4.0",
+    "@typescript-eslint/parser": "^8.4.0",
+    "eslint": "^9.9.0",
+    "globals": "^17.8.0",
+    "typedoc": "^0.26.5",
+    "typescript": "^5.5.4",
+    "typescript-eslint": "^8.65.0",
+    "vite": "^5.4.0",
+    "vitest": "^2.0.5"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  }
+}

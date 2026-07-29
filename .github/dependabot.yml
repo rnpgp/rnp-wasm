@@ -1,0 +1,31 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    labels: ["dependencies"]
+    groups:
+      typescript:
+        patterns: ["typescript", "@types/*"]
+      test:
+        patterns: ["vitest", "@playwright/*", "vite"]
+      lint:
+        patterns: ["eslint*", "@typescript-eslint/*"]
+
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    labels: ["dependencies", "docker"]
+    ignore:
+      # Pin emsdk to deliberate releases. Don't auto-bump.
+      - dependency-name: "emscripten/emsdk"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    labels: ["dependencies", "ci"]

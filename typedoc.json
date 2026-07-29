@@ -1,0 +1,28 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "entryPoints": ["ts/index.ts"],
+  "tsconfig": "tsconfig.json",
+  "out": "docs/api",
+  "name": "rnp-wasm",
+  "includeVersion": true,
+  "readme": "docs/api-readme.md",
+  "categorizeByGroup": true,
+  "categoryOrder": ["Entry", "Lifecycle", "Keyring", "Operations", "Registries", "Providers", "Errors", "Utilities", "*"],
+  "visibilityFilters": {
+    "protected": false,
+    "private": false,
+    "inherited": true,
+    "external": false
+  },
+  "intentionallyNotExported": [],
+  "exclude": [
+    "ts/module-types.ts",
+    "ts.wasm-module.ts",
+    "**/node_modules/**"
+  ],
+  "validation": {
+    "notDocumented": false,
+    "invalidLink": true,
+    "notExported": true
+  }
+}

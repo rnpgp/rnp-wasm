@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>rnp-wasm browser smoke harness</title>
+</head>
+<body>
+  <h1>rnp-wasm browser smoke harness</h1>
+  <pre id="status">loading…</pre>
+  <script type="module">
+    import { initRnp } from "/dist/rnp.js";
+
+    async function run() {
+      try {
+        const rnp = await initRnp({ locateWasm: (p) => `/${p}` });
+        const ffi = rnp.createFfi();
+        // Quick check: version is exposed
+        const v = rnp.versionString();
+        ffi.destroy();
+        window.__rnpResult = "ok";
+        document.getElementById("status").textContent = `ok (${v})`;
+      } catch (e) {
+        window.__rnpResult = `error: ${e.message}`;
+        document.getElementById("status").textContent = `error: ${e.stack || e.message}`;
+      }
+    }
+    run();
+  </script>
+</body>
+</html>
