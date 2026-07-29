@@ -31,12 +31,6 @@ jobs:
       - name: Run build.sh
         run: docker run --rm --user $(id -u):$(id -g) -v $PWD:/work rnp-wasm:local scripts/build.sh
 
-      - name: Compute checksums
-        run: |
-          ( cd dist && for f in rnp.wasm rnp.mjs rnp.js; do
-              [[ -f "$f" ]] && sha256sum "$f" > "$f.sha256"
-            done )
-
       - uses: actions/upload-artifact@v4
         with: { name: dist, path: dist/, if-no-files-found: error }
 
@@ -69,10 +63,10 @@ jobs:
         uses: softprops/action-gh-release@v3
         with:
           files: |
-            dist/rnp.wasm
-            dist/rnp.wasm.sha256
-            dist/rnp.mjs
-            dist/rnp.js
+            dist/module.wasm
+            dist/module.js
+            dist/index.js
+            dist/index.d.ts
             LICENSE
           draft: true
           generate_release_notes: true

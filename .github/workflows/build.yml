@@ -27,7 +27,7 @@ jobs:
       - name: Hash
         id: hash
         run: |
-          sha=$(sha256sum dist/rnp.wasm | awk '{print $1}')
+          sha=$(sha256sum dist/module.wasm | awk '{print $1}')
           echo "sha=${sha}" >> "$GITHUB_OUTPUT"
       - uses: actions/upload-artifact@v4
         with: { name: dist, path: dist/, if-no-files-found: error }

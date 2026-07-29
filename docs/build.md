@@ -15,7 +15,7 @@ cd rnp-wasm
 scripts/build.sh --docker
 ```
 
-Output: `dist/rnp.wasm`, `dist/rnp.mjs`, `dist/rnp.js`, `dist/*.d.ts`.
+Output: `dist/module.wasm`, `dist/module.mjs`, `dist/module.js`, `dist/*.d.ts`.
 
 ## What the build does
 
@@ -43,7 +43,7 @@ scripts/build.sh --variant brainpool  # Brainpool curves
 scripts/build.sh --variant sm         # SM2 / SM3 / SM4
 ```
 
-Outputs to `dist/rnp-<variant>.{wasm,mjs}`. The default variant is `default`.
+Outputs to `dist/module-<variant>.{wasm,mjs}`. The default variant is `default`.
 
 ## Upstream probe (track rnp main)
 

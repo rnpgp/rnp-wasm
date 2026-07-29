@@ -71,7 +71,7 @@ emcmake cmake -S . -B "${BINDINGS_BUILD}" -G "${GENERATOR}" \
   -DBOTAN_LIBRARY="${BOTAN_LIB}" \
   -DRNPWASM_VARIANT="${VARIANT}" \
   -DRNPWASM_ASYNCIFY="${ASYNC_CMAKE_FLAG}" \
-  -DRNPWASM_OUTPUT_NAME="rnp${VARIANT_SUFFIX}${ASYNC_SUFFIX}"
+  -DRNPWASM_OUTPUT_NAME="module${VARIANT_SUFFIX}${ASYNC_SUFFIX}"
 
 cmake --build "${BINDINGS_BUILD}" -j"$(nproc 2>/dev/null || echo 4)"
 
@@ -79,21 +79,23 @@ cmake --build "${BINDINGS_BUILD}" -j"$(nproc 2>/dev/null || echo 4)"
 # RUNTIME_OUTPUT_DIRECTORY (see cmake/Emscripten.cmake).
 echo "==> Bindings compiled"
 ls -la dist/
-# Stale-artifact guarantee: clean anything matching rnp*.{js,wasm,mjs} before
-# link, so a partial build doesn't leave half-states in dist/.
+# Stale-artifact guarantee: clean anything matching module*.{js,wasm,mjs} and
+# legacy rnp*.{js,wasm} before link, so a partial build doesn't leave
+# half-states in dist/.
+rm -f dist/module*.mjs dist/module*.wasm.map dist/module*.html dist/module*.data
 rm -f dist/rnp*.mjs dist/rnp*.wasm.map dist/rnp*.html dist/rnp*.data
 
-# Generate features snapshot (TODO 63) if Node is available.
+# Generate features snapshot if Node is available.
 if command -v node >/dev/null 2>&1; then
   node --input-type=module -e "
     import('node:fs').then(({ writeFileSync }) => {
-      import('./dist/rnp.js').then(m => {
-        m.default({ locateFile: () => new URL('./dist/rnp.wasm', import.meta.url).href }).then(mod => {
+      import('./dist/module.js').then(m => {
+        m.default({ locateFile: () => new URL('./dist/module.wasm', import.meta.url).href }).then(mod => {
           const features = mod.rnpBootstrapFeatures();
           writeFileSync('./dist/features.json', features);
           console.log('==> dist/features.json written');
         }).catch(e => console.warn('features snapshot skipped:', e.message));
-      }).catch(e => console.warn('dist/rnp.js import failed:', e.message));
+      }).catch(e => console.warn('dist/module.js import failed:', e.message));
     });
   " 2>/dev/null || true
 fi

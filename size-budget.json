@@ -1,13 +1,12 @@
 {
-  "rnp.wasm": 10210628,
-  "rnp.wasm.gz": 2939038,
-  "rnp.js": 208074,
+  "module.wasm": 10300907,
+  "module.wasm.gz": 2962354,
+  "module.js": 208127,
   "updated": "2026-07-29",
   "notes": [
-    "Botan 3.12.0 + native Wasm EH (-fwasm-exceptions). Previous baseline",
-    "(3.4 MB wasm) was Botan 3.5.0 + SjLj EH without exception-catching.",
-    "Current build includes full EH machinery across Botan/rnp/bindings,",
-    "which is roughly 3x larger. Subsequent PRs should reduce this via",
-    "--enable-modules to trim unused Botan code."
+    "Renamed dist/rnp.{js,wasm} → dist/module.{js,wasm} in 0.1.1 to avoid",
+    "collision with TS-compiled dist/rnp.js (the Rnp class wrapper).",
+    "Botan 3.12.0 + native Wasm EH (-fwasm-exceptions). Botan module set",
+    "trimmed via --enable-modules in scripts/build-deps.sh."
   ]
 }

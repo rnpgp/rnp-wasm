@@ -3,10 +3,20 @@
   "compilerOptions": {
     "declaration": true,
     "declarationDir": "dist",
-    "emitDeclarationOnly": true,
+    "emitDeclarationOnly": false,
     "noEmit": false,
-    "outDir": "dist"
+    "outDir": "dist",
+    "rootDir": "ts",
+    "sourceMap": false,
+    "inlineSources": false
   },
   "include": ["ts/**/*.ts"],
-  "exclude": ["test", "node_modules", "dist", "third-party", "build", "scripts"]
+  "exclude": [
+    "test",
+    "node_modules",
+    "dist",
+    "third-party",
+    "build",
+    "scripts"
+  ]
 }

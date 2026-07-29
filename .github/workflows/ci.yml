@@ -55,9 +55,8 @@ jobs:
       - name: Hash wasm artifact
         id: hash
         run: |
-          sha=$(sha256sum dist/rnp.wasm | awk '{print $1}')
+          sha=$(sha256sum dist/module.wasm | awk '{print $1}')
           echo "sha=${sha}" >> "$GITHUB_OUTPUT"
-          echo "${sha}" > dist/rnp.wasm.sha256
 
       - name: Upload dist artifact
         uses: actions/upload-artifact@v4
@@ -135,10 +134,10 @@ jobs:
       - name: Compute sizes
         id: sizes
         run: |
-          cur=$(gzip -c dist/rnp.wasm | wc -c)
+          cur=$(gzip -c dist/module.wasm | wc -c)
           echo "current=${cur}" >> "$GITHUB_OUTPUT"
           if [[ -f size-budget.json ]]; then
-            base=$(jq -r '.["rnp.wasm.gz"]' size-budget.json)
+            base=$(jq -r '.["module.wasm.gz"]' size-budget.json)
           else
             base=0
           fi
@@ -153,7 +152,7 @@ jobs:
             const pct = base === 0 ? 0 : Math.round((delta / base) * 100);
             const emoji = delta > 0 ? '⚠️' : '✅';
             const body = `### Bundle size
-            ${emoji} rnp.wasm.gz: **${cur} bytes** (baseline ${base}, delta ${delta >= 0 ? '+' : ''}${delta} / ${pct}%)`;
+            ${emoji} module.wasm.gz: **${cur} bytes** (baseline ${base}, delta ${delta >= 0 ? '+' : ''}${delta} / ${pct}%)`;
             await github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,

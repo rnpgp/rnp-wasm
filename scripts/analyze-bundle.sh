@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # scripts/analyze-bundle.sh
-# Emits a Markdown report describing the contents of dist/rnp.wasm:
+# Emits a Markdown report describing the contents of dist/module.wasm:
 #   - section sizes (wasm-objdump -h)
 #   - import count + names
 #   - export count
@@ -16,7 +16,7 @@ REPO_ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "${REPO_ROOT}"
 
 OUT="${1:-dist/bundle-analysis.md}"
-WASM="${WASM:-dist/rnp.wasm}"
+WASM="${WASM:-dist/module.wasm}"
 
 if [[ ! -f "${WASM}" ]]; then
   echo "WASM file not found at ${WASM}; run scripts/build.sh first" >&2

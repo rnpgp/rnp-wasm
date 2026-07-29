@@ -1,18 +1,18 @@
 {
   "name": "@rnpgp/rnp",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "WASM build of rnp (RFC 9580 OpenPGP) with idiomatic TypeScript bindings.",
   "license": "BSD-2-Clause",
   "type": "module",
   "sideEffects": false,
-  "main": "dist/rnp.js",
-  "module": "dist/rnp.js",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/rnp.js",
-      "require": "./dist/rnp.js"
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
     },
     "./package.json": "./package.json"
   },
@@ -40,7 +40,7 @@
     "clean": "scripts/clean.sh",
     "dev:shell": "scripts/dev-shell.sh",
     "bench": "vitest bench --config vitest.bench.config.ts",
-    "prepublishOnly": "node -e \"['dist/rnp.js','dist/rnp.wasm'].forEach(f=>{const fs=require('fs');if(!fs.existsSync(f)){console.error('Missing: '+f);process.exit(1)}})\""
+    "prepublishOnly": "node -e \"['dist/index.js','dist/index.d.ts','dist/module.js','dist/module.wasm'].forEach(f=>{const fs=require('fs');if(!fs.existsSync(f)){console.error('Missing: '+f);process.exit(1)}})\""
   },
   "dependencies": {
     "comlink": "^4.4.1"
