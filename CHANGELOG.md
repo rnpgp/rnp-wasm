@@ -9,6 +9,14 @@ This file is auto-maintained by [release-please](https://github.com/googleapis/r
 based on [Conventional Commits](https://www.conventionalcommits.org/) on `main`.
 Do not edit by hand — propose changes via Conventional Commits and let automation update this file.
 
+## 1.0.0 (2026-07-29)
+
+
+### Bug Fixes
+
+* **ci:** make /opt/rnp-wasm world-writable in Docker image ([b51490d](https://github.com/rnpgp/rnp-wasm/commit/b51490d54024416f4b46d438173d089f79e1ce87))
+* don't rely on Module.err being exposed in Emscripten 6.x ([89e1022](https://github.com/rnpgp/rnp-wasm/commit/89e1022515cbf58f66b6ceeabbbef3a9259c581b))
+
 ## [0.1.0] - 2026-07-29
 
 First public alpha. Core API stable; 82/82 tests pass against rnp 0.18.1 +
