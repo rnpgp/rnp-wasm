@@ -37,7 +37,9 @@ RUN apt-get update \
  && rm -rf /var/lib/apt/lists/*
 
 # Pre-fetch upstream source tarballs. Compilation happens in scripts/build-deps.sh.
-RUN install -d -o emscripten -g emscripten \
+# chmod 1777 so CI runners (which mount as --user $(id -u):$(id -g), a different
+# UID than emscripten's 1000) can extract + write into these directories.
+RUN install -d \
       "${DEPS_SRC}" "${DEPS_PREFIX}" "${DEPS_BUILD}" \
  && curl -fsSL "https://botan.randombit.net/releases/Botan-${BOTAN_VERSION}.tar.xz" \
     -o "${DEPS_SRC}/botan-${BOTAN_VERSION}.tar.xz" \
@@ -47,7 +49,7 @@ RUN install -d -o emscripten -g emscripten \
     -o "${DEPS_SRC}/zlib-${ZLIB_VERSION}.tar.gz" \
  && curl -fsSL "https://sourceware.org/pub/bzip2/bzip2-${BZIP2_VERSION}.tar.gz" \
     -o "${DEPS_SRC}/bzip2-${BZIP2_VERSION}.tar.gz" \
- && chown -R emscripten:emscripten /opt/rnp-wasm
+ && chmod -R 1777 /opt/rnp-wasm
 
 WORKDIR /work
 # emscripten user is the default non-root user in the base image.
