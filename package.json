@@ -7,12 +7,14 @@
   "sideEffects": false,
   "main": "dist/index.js",
   "module": "dist/index.js",
+  "browser": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
-      "require": "./dist/index.js"
+      "require": "./dist/index.js",
+      "browser": "./dist/index.js"
     },
     "./package.json": "./package.json"
   },
@@ -42,14 +44,12 @@
     "bench": "vitest bench --config vitest.bench.config.ts",
     "prepublishOnly": "node -e \"['dist/index.js','dist/index.d.ts','dist/module.js','dist/module.wasm'].forEach(f=>{const fs=require('fs');if(!fs.existsSync(f)){console.error('Missing: '+f);process.exit(1)}})\""
   },
-  "dependencies": {
-    "comlink": "^4.4.1"
-  },
   "devDependencies": {
     "@playwright/test": "^1.47.0",
     "@types/node": "^22.5.0",
     "@typescript-eslint/eslint-plugin": "^8.4.0",
     "@typescript-eslint/parser": "^8.4.0",
+    "comlink": "^4.4.2",
     "eslint": "^9.9.0",
     "globals": "^17.8.0",
     "typedoc": "^0.26.5",

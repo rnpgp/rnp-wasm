@@ -4,3 +4,9 @@
 !README.md
 !CHANGELOG.md
 !package.json
+
+# Async (JSPI) variant is opt-in. Build from source with `scripts/build.sh --async`
+# or wait for the dedicated @rnpgp/rnp-async package. Keeping it out of the
+# default tarball saves ~10 MB for the 99% of consumers who don't need it.
+dist/module-async.js
+dist/module-async.wasm
