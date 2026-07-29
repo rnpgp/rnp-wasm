@@ -24,7 +24,12 @@ ENV BOTAN_VERSION=${BOTAN_VERSION} \
     DEPS_PREFIX=/opt/rnp-wasm/deps \
     DEPS_SRC=/opt/rnp-wasm/src \
     DEPS_BUILD=/opt/rnp-wasm/build \
-    EM_CC_CACHE=1
+    EM_CC_CACHE=1 \
+    HOME=/tmp
+# HOME=/tmp: GitHub Actions runs the container as `--user $(id -u):$(id -g)`
+# (a UID that has no home directory in the image). npm/npx default their
+# cache to $HOME/.npm; without HOME set, npm writes to /.npm which is
+# root-owned and unwritable. /tmp is world-writable so any UID works.
 
 # Build tooling. emsdk already ships emcc/emcmake/embuilder/python3.
 # Use unpinned cmake/ninja — the exact versions on the base image are fine;
