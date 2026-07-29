@@ -45,13 +45,14 @@
     "prepublishOnly": "node -e \"['dist/index.js','dist/index.d.ts','dist/module.js','dist/module.wasm'].forEach(f=>{const fs=require('fs');if(!fs.existsSync(f)){console.error('Missing: '+f);process.exit(1)}})\""
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.47.0",
     "@types/node": "^26.1.2",
     "@typescript-eslint/eslint-plugin": "^8.4.0",
     "@typescript-eslint/parser": "^8.4.0",
-    "eslint": "^9.9.0",
+    "eslint": "^10.8.0",
     "globals": "^17.8.0",
-    "typedoc": "^0.26.5",
+    "typedoc": "^0.28.20",
     "typescript": "^5.5.4",
     "typescript-eslint": "^8.65.0",
     "vite": "^8.1.5",

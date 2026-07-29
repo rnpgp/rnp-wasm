@@ -74,10 +74,9 @@ describe("handle lifecycle", () => {
   });
 
   it("[Symbol.dispose] invokes destroy", () => {
-    let ffi: { [Symbol.dispose](): void; isAlive: boolean } | null = rnp().createFfi();
+    const ffi: { [Symbol.dispose](): void; isAlive: boolean } = rnp().createFfi();
     expect(ffi.isAlive).toBe(true);
     ffi[Symbol.dispose]();
     expect(ffi.isAlive).toBe(false);
-    ffi = null;
   });
 });
