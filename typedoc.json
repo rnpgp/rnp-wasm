@@ -3,7 +3,7 @@
   "entryPoints": ["ts/index.ts"],
   "tsconfig": "tsconfig.json",
   "out": "docs/api",
-  "name": "rnp-wasm",
+  "name": "@rnpgp/rnp",
   "includeVersion": true,
   "readme": "docs/api-readme.md",
   "categorizeByGroup": true,

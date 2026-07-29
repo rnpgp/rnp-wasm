@@ -1,13 +1,21 @@
-# rnp-wasm
+# @rnpgp/rnp
 
 [![CI](https://img.shields.io/badge/CI-passing-success)](#)
 [![Tests](https://img.shields.io/badge/tests-82%2F82-success)](#)
 [![License](https://img.shields.io/badge/license-BSD--2--Clause-blue)](./LICENSE)
+[![npm](https://img.shields.io/npm/v/@rnpgp/rnp.svg)](https://www.npmjs.com/package/@rnpgp/rnp)
+
+**npm:** [`@rnpgp/rnp`](https://www.npmjs.com/package/@rnpgp/rnp) ·
+**GitHub:** [`rnpgp/rnp-wasm`](https://github.com/rnpgp/rnp-wasm)
 
 WASM build of [rnp](https://github.com/rnpgp/rnp) (RFC 9580 OpenPGP C++
 library) with idiomatic TypeScript bindings. Built on Emscripten 3.1.74
 + Botan 3.12.0, runnable in Node.js (≥18.18) and modern browsers
 (WASM + WebCrypto-agnostic; uses Embind + FinalizationRegistry).
+
+> **Note on naming:** the npm package is `@rnpgp/rnp` (matches the
+> sibling bindings `ruby-rnp`, `php-rnp`, `swift-rnp`). The GitHub repo
+> is `rnp-wasm` for historical reasons; both refer to the same project.
 
 > **Status:** alpha. Core API surface (Ffi, Keyring, Key, sign/verify,
 > encrypt/decrypt, streaming, packet dump, registries) is stable and
@@ -28,7 +36,7 @@ library) with idiomatic TypeScript bindings. Built on Emscripten 3.1.74
 ## Install
 
 ```sh
-npm install rnp-wasm
+npm install @rnpgp/rnp
 ```
 
 ### Requirements
@@ -40,7 +48,7 @@ npm install rnp-wasm
 ## Quick start
 
 ```typescript
-import { initRnp } from "rnp-wasm";
+import { initRnp } from "@rnpgp/rnp";
 
 const rnp = await initRnp();
 using ffi = rnp.createFfi();
@@ -60,7 +68,7 @@ console.log("Alice's fingerprint:", alice.fingerprint);
 ## Sign + verify
 
 ```typescript
-import { initRnp, SignOperation, VerifyOperation } from "rnp-wasm";
+import { initRnp, SignOperation, VerifyOperation } from "@rnpgp/rnp";
 
 const rnp = await initRnp();
 using ffi = rnp.createFfi();
@@ -100,7 +108,7 @@ message), `"detached"` (signature separate from message).
 ## Encrypt + decrypt
 
 ```typescript
-import { EncryptOperation, decrypt } from "rnp-wasm";
+import { EncryptOperation, decrypt } from "@rnpgp/rnp";
 
 // Public-key encryption
 const plaintext = new TextEncoder().encode("secret");
@@ -129,7 +137,7 @@ using op = EncryptOperation
 ## Key generation
 
 ```typescript
-import { GenerateOperation } from "rnp-wasm";
+import { GenerateOperation } from "@rnpgp/rnp";
 
 // RSA primary key (sign + certify + encrypt)
 using op = GenerateOperation
@@ -159,7 +167,7 @@ Sync callbacks; ideal for piping file/socket data through rnp without
 buffering the whole message in memory:
 
 ```typescript
-import { StreamInput, StreamOutput, SignOperation } from "rnp-wasm";
+import { StreamInput, StreamOutput, SignOperation } from "@rnpgp/rnp";
 
 let offset = 0;
 using sIn = StreamInput.create(ffi, (buf) => {
@@ -224,7 +232,7 @@ registries for type-safe lookups:
 import {
   HashAlgorithms, SymmetricAlgorithms, PublicKeyAlgorithms,
   AeadAlgorithms, CompressionAlgorithms, Curves,
-} from "rnp-wasm";
+} from "@rnpgp/rnp";
 
 HashAlgorithms.lookup("sha256");       // → "SHA256"
 HashAlgorithms.lookup("SHA-256");      // → "SHA256" (alias)

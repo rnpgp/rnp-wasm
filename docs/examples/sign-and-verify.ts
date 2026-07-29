@@ -6,7 +6,7 @@
  * calls; tamper detection.
  */
 
-import { initRnp, SignOperation, VerifyOperation, RnpError } from "rnp-wasm";
+import { initRnp, SignOperation, VerifyOperation, RnpError } from "@rnpgp/rnp";
 
 async function main() {
   const rnp = await initRnp();

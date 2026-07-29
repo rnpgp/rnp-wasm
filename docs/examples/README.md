@@ -13,7 +13,7 @@ that you can adapt into your application.
 
 ## Running
 
-These examples are written for the published npm package. After `npm install rnp-wasm`:
+These examples are written for the published npm package. After `npm install @rnpgp/rnp`:
 
 ```sh
 # Adjust import paths if you're running against a local build.

@@ -6,7 +6,7 @@
  * compare fingerprints via constant-time Key.equals().
  */
 
-import { initRnp } from "rnp-wasm";
+import { initRnp } from "@rnpgp/rnp";
 
 async function main() {
   const rnp = await initRnp();

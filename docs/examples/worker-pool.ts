@@ -7,7 +7,7 @@
  * operations without re-loading per call.
  */
 
-import { WorkerPool } from "rnp-wasm";
+import { WorkerPool } from "@rnpgp/rnp";
 
 async function main() {
   const pool = new WorkerPool({ size: 4 });

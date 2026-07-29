@@ -5,7 +5,7 @@ This document walks the public API by domain. For complete type signatures see t
 ## Setup
 
 ```typescript
-import { initRnp } from "rnp-wasm";
+import { initRnp } from "@rnpgp/rnp";
 
 const rnp = await initRnp();
 console.log(rnp.versionString());  // e.g. "0.18.1"
@@ -213,7 +213,7 @@ ffi.setPasswordProvider(({ keyFingerprint, pgpContext }) => {
 All algorithm and feature names are validated against a registry. Adding a new algorithm:
 
 ```typescript
-import { HashAlgorithms } from "rnp-wasm";
+import { HashAlgorithms } from "@rnpgp/rnp";
 HashAlgorithms.register("SHA-1024", "SHA-1024", ["sha1024"]);
 ```
 
@@ -224,7 +224,7 @@ This makes `op.hash("SHA-1024")` accepted without touching operation code.
 All rnp failures throw `RnpError`:
 
 ```typescript
-import { RnpError } from "rnp-wasm";
+import { RnpError } from "@rnpgp/rnp";
 
 try {
   op.execute();

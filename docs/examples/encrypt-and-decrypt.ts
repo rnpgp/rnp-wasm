@@ -5,7 +5,7 @@
  * Public-key encryption to a recipient + password-based (symmetric) encryption.
  */
 
-import { initRnp, EncryptOperation, decrypt } from "rnp-wasm";
+import { initRnp, EncryptOperation, decrypt } from "@rnpgp/rnp";
 
 async function main() {
   const rnp = await initRnp();

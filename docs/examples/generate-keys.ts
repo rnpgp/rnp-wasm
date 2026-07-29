@@ -6,7 +6,7 @@
  * armored; re-import to verify round-trip.
  */
 
-import { initRnp, GenerateOperation, KeyExportFlags } from "rnp-wasm";
+import { initRnp, GenerateOperation, KeyExportFlags } from "@rnpgp/rnp";
 
 async function main() {
   const rnp = await initRnp();
