@@ -18,6 +18,8 @@
     "third-party",
     "build",
     "scripts",
+    "ts/worker.ts",
+    "ts/pool.ts",
     "ts/pqc.ts",
     "ts/disposable.ts",
     "ts/memory/pool.ts"
