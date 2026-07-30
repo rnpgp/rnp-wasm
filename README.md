@@ -357,8 +357,7 @@ rnp-wasm/
 
 ## Release flow
 
-Releases publish to npm via [OIDC trusted publishing](https://docs.npmjs.com/generating-provenance-statements#prerequisites)
-from `.github/workflows/release.yml`. Two ways to cut a release:
+Releases publish to npm from `.github/workflows/release.yml`. Two ways to cut a release:
 
 1. **Tag push** — `git tag v0.1.2 && git push origin v0.1.2`
 2. **Actions UI** — https://github.com/rnpgp/rnp-wasm/actions/workflows/release.yml →
