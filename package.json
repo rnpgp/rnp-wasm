@@ -1,6 +1,6 @@
 {
   "name": "@rnpgp/rnp",
-  "version": "0.1.1",
+  "version": "1.0.0",
   "description": "WASM build of rnp (RFC 9580 OpenPGP) with idiomatic TypeScript bindings.",
   "license": "BSD-2-Clause",
   "repository": {
