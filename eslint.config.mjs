@@ -10,7 +10,15 @@ import globals from "globals";
 
 export default tseslint.config(
   {
-    ignores: ["dist/**", "build/**", "third-party/**", "node_modules/**", "*.cjs", "docs/**"],
+    ignores: [
+      "dist/**",
+      "build/**",
+      "third-party/**",
+      "node_modules/**",
+      "*.cjs",
+      "docs/**",
+      "test/browser/harness-worker.js",  // module worker file, not in tsconfig
+    ],
   },
   js.configs.recommended,
   ...tseslint.configs.recommended,
