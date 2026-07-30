@@ -3,6 +3,10 @@
   "version": "0.1.1",
   "description": "WASM build of rnp (RFC 9580 OpenPGP) with idiomatic TypeScript bindings.",
   "license": "BSD-2-Clause",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rnpgp/rnp-wasm.git"
+  },
   "type": "module",
   "sideEffects": false,
   "main": "dist/index.js",
