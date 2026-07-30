@@ -10,13 +10,14 @@ export default defineConfig({
     trace: "retain-on-failure",
   },
   webServer: {
-    // vite dev mode (not preview) so we don't need a build step. preview
-    // requires `vite build` to have populated outDir; the harness doesn't
-    // need a build since it imports the already-built dist/* as static files.
-    command: "vite --port 4173 --strictPort",
-    url: "http://127.0.0.1:4173/harness.html",
+    // Python's built-in HTTP server is reliable across environments; vite
+    // preview needed a build step (we don't run), and vite dev mode took
+    // 180s+ to come up. Serving from the project root means both
+    // /test/browser/harness.html and /dist/* are accessible.
+    command: "python3 -m http.server 4173 --bind 127.0.0.1",
+    url: "http://127.0.0.1:4173/test/browser/harness.html",
     reuseExistingServer: !process.env.CI,
-    timeout: 180_000,
+    timeout: 60_000,
   },
   projects: [
     { name: "chromium", use: { ...devices["Desktop Chrome"] } },
