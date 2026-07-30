@@ -8,24 +8,13 @@
   <h1>rnp-wasm worker harness</h1>
   <pre id="status">loading…</pre>
   <script type="module">
-    // Inline a minimal worker that loads rnp-wasm itself and verifies it can
-    // init + create an FFI + read the version. Worker source is a Blob URL so
-    // this harness doesn't depend on a separate worker bundle being emitted.
-    const workerSrc = `
-      import { initRnp } from "/dist/index.js";
-      const rnp = await initRnp({ locateWasm: (p) => '/dist/' + p });
-      const ffi = rnp.createFfi();
-      const v = rnp.versionString();
-      ffi.destroy();
-      postMessage({ ok: true, version: v });
-    `;
-    const blob = new Blob([workerSrc], { type: "text/javascript" });
-    const url = URL.createObjectURL(blob);
-
+    // Use a real module worker (not a Blob URL) so import.meta.url is a
+    // proper http:// URL and relative imports inside wasm-module.ts
+    // (../dist/module.js) resolve correctly.
     async function run() {
       try {
         const result = await new Promise((resolve, reject) => {
-          const worker = new Worker(url, { type: "module" });
+          const worker = new Worker("/test/browser/harness-worker.js", { type: "module" });
           const timer = setTimeout(() => {
             worker.terminate();
             reject(new Error("worker init timed out after 30s"));
@@ -51,8 +40,6 @@
       } catch (e) {
         window.__rnpResult = `error: ${e.message}`;
         document.getElementById("status").textContent = `error: ${e.stack || e.message}`;
-      } finally {
-        URL.revokeObjectURL(url);
       }
     }
     run();
