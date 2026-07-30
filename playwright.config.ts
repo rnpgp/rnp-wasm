@@ -8,10 +8,11 @@ export default defineConfig({
   fullyParallel: false,
   retries: 0,
   use: {
-    // Python http.server runs at project root; harnesses live under
-    // /test/browser/. baseURL captures the harness root so test files can
-    // use relative paths like "/harness.html".
-    baseURL: "http://127.0.0.1:4173/test/browser",
+    // baseURL is the python http.server root. Harnesses live at
+    // /test/browser/* — paths are spelled out in test files so they
+    // don't depend on how playwright resolves relative URLs against
+    // baseURL's path component (it doesn't, cleanly).
+    baseURL: "http://127.0.0.1:4173",
     trace: "retain-on-failure",
   },
   webServer: {

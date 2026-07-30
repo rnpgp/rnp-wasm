@@ -25,7 +25,7 @@ function attachListeners(page: Page): void {
 
 test("rnp-wasm loads and runs in browser", async ({ page }) => {
   attachListeners(page);
-  await page.goto("/harness.html");
+  await page.goto("/test/browser/harness.html");
   // Generous timeout: 10 MB wasm fetch + Botan PK_Signer init is slow on
   // CI shared runners.
   await page.waitForFunction(() => window.__rnpResult !== undefined, { timeout: 120_000 });
@@ -35,7 +35,7 @@ test("rnp-wasm loads and runs in browser", async ({ page }) => {
 
 test("WorkerPool spins up a worker and initializes rnp", async ({ page }) => {
   attachListeners(page);
-  await page.goto("/harness-worker.html");
+  await page.goto("/test/browser/harness-worker.html");
   await page.waitForFunction(() => window.__rnpResult !== undefined, { timeout: 120_000 });
   const result = await page.evaluate(() => window.__rnpResult);
   expect(result).toBe("ok");
