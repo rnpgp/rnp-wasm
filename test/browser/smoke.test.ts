@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, type Page } from "@playwright/test";
 
 // Harness writes its result here. Declared as a ambient augmentation so TS
 // typechecks the page.evaluate calls.
@@ -11,15 +11,15 @@ declare global {
 // Attach a console + error listener BEFORE navigating, so we can see what
 // the page logs even if the test ultimately times out. Useful for debugging
 // CI-only browser failures.
-function attachListeners(page: import("@playwright/test").Page): void {
+function attachListeners(page: Page): void {
   page.on("console", (msg) => {
-    console.log(`[browser ${msg.type()}]`, msg.text());
+    console.warn(`[browser ${msg.type()}]`, msg.text());
   });
   page.on("pageerror", (err) => {
-    console.log("[browser pageerror]", err.message);
+    console.warn("[browser pageerror]", err.message);
   });
   page.on("requestfailed", (req) => {
-    console.log("[browser reqfail]", req.url(), req.failure()?.errorText);
+    console.warn("[browser reqfail]", req.url(), req.failure()?.errorText);
   });
 }
 
