@@ -10,14 +10,16 @@ declare global {
 
 test("rnp-wasm loads and runs in browser", async ({ page }) => {
   await page.goto("/harness.html");
-  await page.waitForFunction(() => window.__rnpResult !== undefined, { timeout: 30_000 });
+  // Generous timeout: 10 MB wasm fetch + Botan PK_Signer init is slow on
+  // CI shared runners.
+  await page.waitForFunction(() => window.__rnpResult !== undefined, { timeout: 120_000 });
   const result = await page.evaluate(() => window.__rnpResult);
   expect(result).toBe("ok");
 });
 
 test("WorkerPool spins up a worker and initializes rnp", async ({ page }) => {
   await page.goto("/harness-worker.html");
-  await page.waitForFunction(() => window.__rnpResult !== undefined, { timeout: 60_000 });
+  await page.waitForFunction(() => window.__rnpResult !== undefined, { timeout: 120_000 });
   const result = await page.evaluate(() => window.__rnpResult);
   expect(result).toBe("ok");
 });

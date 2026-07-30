@@ -2,7 +2,9 @@ import { defineConfig, devices } from "@playwright/test";
 
 export default defineConfig({
   testDir: "./test/browser",
-  timeout: 60_000,
+  // Generous timeout: 10 MB wasm load + Botan init can take 30-60s on
+  // CI shared runners (vs <2s locally). Better to wait than flake.
+  timeout: 180_000,
   fullyParallel: false,
   retries: 0,
   use: {
