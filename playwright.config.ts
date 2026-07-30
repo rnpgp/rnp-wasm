@@ -6,7 +6,10 @@ export default defineConfig({
   fullyParallel: false,
   retries: 0,
   use: {
-    baseURL: "http://127.0.0.1:4173",
+    // Python http.server runs at project root; harnesses live under
+    // /test/browser/. baseURL captures the harness root so test files can
+    // use relative paths like "/harness.html".
+    baseURL: "http://127.0.0.1:4173/test/browser",
     trace: "retain-on-failure",
   },
   webServer: {
