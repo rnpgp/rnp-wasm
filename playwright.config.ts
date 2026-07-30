@@ -10,7 +10,10 @@ export default defineConfig({
     trace: "retain-on-failure",
   },
   webServer: {
-    command: "vite preview --port 4173 --strictPort",
+    // vite dev mode (not preview) so we don't need a build step. preview
+    // requires `vite build` to have populated outDir; the harness doesn't
+    // need a build since it imports the already-built dist/* as static files.
+    command: "vite --port 4173 --strictPort",
     url: "http://127.0.0.1:4173/harness.html",
     reuseExistingServer: !process.env.CI,
     timeout: 180_000,
